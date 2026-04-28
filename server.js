@@ -131,9 +131,14 @@ app.get("/villages", validateApiKey, async (req, res) => {
       [subdistrict]
     );
 
+    // const formatted = result.rows.map(row => ({
+    //   address: `${row.village}, ${row.subdistrict}, ${row.district}, ${row.state}, India`
+    // }));
     const formatted = result.rows.map(row => ({
-      address: `${row.village}, ${row.subdistrict}, ${row.district}, ${row.state}, India`
-    }));
+  village: row.village,
+  fullAddress: `${row.village}, ${row.subdistrict}, ${row.district}, ${row.state}, India`
+}));
+    
 
     res.json(formatted);
   } catch (err) {

@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 
 function App() {
   const API_URL = "https://geo-api-11j8.onrender.com";
-  const API_KEY = "16c24b72d7d478e6995cde4ec3388d7b"; // 🔴 paste your key
+  const API_KEY = "16c24b72d7d478e6995cde4ec3388d7b"; // 🔴 replace with your key
+
+  const headers = {
+    "x-api-key": API_KEY
+  };
 
   const [states, setStates] = useState([]);
   const [districts, setDistricts] = useState([]);
@@ -14,11 +18,7 @@ function App() {
   const [selectedSubdistrict, setSelectedSubdistrict] = useState("");
   const [selectedVillage, setSelectedVillage] = useState("");
 
-  const headers = {
-    "x-api-key": API_KEY
-  };
-
-  // Load states
+  // 🔹 Load States
   useEffect(() => {
   fetch(`${API_URL}/states`, {
     headers: {
@@ -27,71 +27,119 @@ function App() {
   })
     .then(res => res.json())
     .then(data => {
-      console.log(data); // 👈 debug
+      console.log("States:", data);
       setStates(Array.isArray(data) ? data : []);
     });
 }, []);
 
-  // Load districts
+  // 🔹 Load Districts
+ useEffect(() => {
+  if (!selectedState) return;
+
+  fetch(`${API_URL}/districts?state=${selectedState}`, {
+    headers: {
+      "x-api-key": API_KEY
+    }
+  })
+    .then(res => res.json())
+    .then(data => setDistricts(Array.isArray(data) ? data : []));
+}, [selectedState]);
+
+  // 🔹 Load Subdistricts
   useEffect(() => {
-    if (!selectedState) return;
+  if (!selectedDistrict) return;
 
-    fetch(`${API_URL}/districts?state=${selectedState}`, { headers })
-      .then(res => res.json())
-      .then(data => setDistricts(data));
-  }, [selectedState]);
+  fetch(`${API_URL}/subdistricts?district=${selectedDistrict}`, {
+    headers: {
+      "x-api-key": API_KEY
+    }
+  })
+    .then(res => res.json())
+    .then(data => setSubdistricts(Array.isArray(data) ? data : []));
+}, [selectedDistrict]);
 
-  // Load subdistricts
+  // 🔹 Load Villages
+  
   useEffect(() => {
-    if (!selectedDistrict) return;
+  if (!selectedSubdistrict) return;
 
-    fetch(`${API_URL}/subdistricts?district=${selectedDistrict}`, { headers })
-      .then(res => res.json())
-      .then(data => setSubdistricts(data));
-  }, [selectedDistrict]);
-
-  // Load villages
-  useEffect(() => {
-    if (!selectedSubdistrict) return;
-
-    fetch(`${API_URL}/villages?subdistrict=${selectedSubdistrict}`, { headers })
-      .then(res => res.json())
-      .then(data => setVillages(data));
-  }, [selectedSubdistrict]);
+  fetch(`${API_URL}/villages?subdistrict=${selectedSubdistrict}`, {
+    headers: {
+      "x-api-key": API_KEY
+    }
+  })
+    .then(res => res.json())
+    .then(data => setVillages(Array.isArray(data) ? data : []));
+}, [selectedSubdistrict]);
 
   return (
     <div style={{ padding: "20px" }}>
       <h2>Geo API Demo 🌍</h2>
 
-      {/* State */}
-      <select onChange={e => setSelectedState(e.target.value)}>
-        <option>Select State</option>
+      {/* 🔹 State */}
+      <select
+        value={selectedState}
+        onChange={(e) => {
+          setSelectedState(e.target.value);
+          setDistricts([]);
+          setSubdistricts([]);
+          setVillages([]);
+        }}
+      >
+        <option value="">Select State</option>
         {states.map((s, i) => (
-          <option key={i}>{s.state}</option>
+          <option key={i} value={s.state}>
+            {s.state}
+          </option>
         ))}
       </select>
 
-      {/* District */}
-      <select onChange={e => setSelectedDistrict(e.target.value)}>
-        <option>Select District</option>
+      {/* 🔹 District */}
+      <select
+        value={selectedDistrict}
+        onChange={(e) => {
+          setSelectedDistrict(e.target.value);
+          setSubdistricts([]);
+          setVillages([]);
+        }}
+      >
+        <option value="">Select District</option>
         {districts.map((d, i) => (
-          <option key={i}>{d.district}</option>
+          <option key={i} value={d.district}>
+            {d.district}
+          </option>
         ))}
       </select>
 
-      {/* Subdistrict */}
-      <select onChange={e => setSelectedSubdistrict(e.target.value)}>
-        <option>Select Subdistrict</option>
+      {/* 🔹 Subdistrict */}
+      <select
+        value={selectedSubdistrict}
+        onChange={(e) => {
+          setSelectedSubdistrict(e.target.value);
+          setVillages([]);
+        }}
+      >
+        <option value="">Select Subdistrict</option>
         {subdistricts.map((s, i) => (
-          <option key={i}>{s.subdistrict}</option>
+          <option key={i} value={s.subdistrict}>
+            {s.subdistrict}
+          </option>
         ))}
       </select>
 
-      {/* Village */}
-      <select onChange={e => setSelectedVillage(e.target.value)}>
-        <option>Select Village</option>
+      {/* 🔹 Village */}
+      <select
+        value={selectedVillage}
+        onChange={(e) => setSelectedVillage(e.target.value)}
+      >
+        <option value="">Select Village</option>
         {villages.map((v, i) => (
-          <option key={i}>{v.address}</option>
+          // <option key={i} value={v.address}>
+          //   {v.address}
+          // </option>
+          <option key={i} value={v.fullAddress}>
+  {v.village}
+</option>
         ))}
       </select>
 
