@@ -62,17 +62,20 @@ app.get("/generate-key", async (req, res) => {
 
 
 // 🔥 4. STATES
-app.get("/states", validateApiKey, async (req, res) => {
+app.get("/states", async (req, res) => {
   try {
     const result = await pool.query(
       "SELECT DISTINCT state FROM final_india_village_data_state ORDER BY state"
     );
+
+    console.log("DB RESULT:", result.rows);  // 🔥 DEBUG
+
     res.json(result.rows);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
-
 
 // 🔥 5. DISTRICTS
 app.get("/districts", validateApiKey, async (req, res) => {
