@@ -65,7 +65,7 @@ app.get("/generate-key", async (req, res) => {
 app.get("/states", validateApiKey, async (req, res) => {
   try {
     const result = await pool.query(
-      "SELECT DISTINCT state FROM final_india_village_data ORDER BY state"
+      "SELECT DISTINCT state FROM final_india_village_data_state ORDER BY state"
     );
     res.json(result.rows);
   } catch (err) {
@@ -84,7 +84,7 @@ app.get("/districts", validateApiKey, async (req, res) => {
 
   try {
     const result = await pool.query(
-      "SELECT DISTINCT district FROM final_india_village_data WHERE state = $1 ORDER BY district",
+      "SELECT DISTINCT district FROM final_india_village_data_state WHERE state = $1 ORDER BY district",
       [state]
     );
     res.json(result.rows);
@@ -104,7 +104,7 @@ app.get("/subdistricts", validateApiKey, async (req, res) => {
 
   try {
     const result = await pool.query(
-      "SELECT DISTINCT subdistrict FROM final_india_village_data WHERE district = $1 ORDER BY subdistrict",
+      "SELECT DISTINCT subdistrict FROM final_india_village_data_state WHERE district = $1 ORDER BY subdistrict",
       [district]
     );
     res.json(result.rows);
@@ -149,7 +149,7 @@ app.get("/search", validateApiKey, async (req, res) => {
 
   try {
     const result = await pool.query(
-      `SELECT * FROM final_india_village_data
+      `SELECT * FROM final_india_village_data_state
        WHERE village ILIKE $1
        LIMIT 10`,
       [`${q}%`]
