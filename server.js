@@ -118,6 +118,29 @@ app.get("/subdistricts", validateApiKey, async (req, res) => {
 
 
 // 🔥 7. VILLAGES
+// app.get("/villages", validateApiKey, async (req, res) => {
+//   const { subdistrict } = req.query;
+
+//   if (!subdistrict) {
+//     return res.status(400).json({ error: "Subdistrict is required" });
+//   }
+
+//   try {
+//     const result = await pool.query(
+//       "SELECT * FROM final_india_village_data_state WHERE subdistrict = $1 LIMIT 20",
+//       [subdistrict]
+//     );
+
+//     const formatted = result.rows.map(row => ({
+//       address: `${row.village}, ${row.subdistrict}, ${row.district}, ${row.state}, India`
+//     }));
+    
+
+//     res.json(formatted);
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
 app.get("/villages", validateApiKey, async (req, res) => {
   const { subdistrict } = req.query;
 
@@ -131,14 +154,9 @@ app.get("/villages", validateApiKey, async (req, res) => {
       [subdistrict]
     );
 
-    // const formatted = result.rows.map(row => ({
-    //   address: `${row.village}, ${row.subdistrict}, ${row.district}, ${row.state}, India`
-    // }));
     const formatted = result.rows.map(row => ({
-  village: row.village,
-  fullAddress: `${row.village}, ${row.subdistrict}, ${row.district}, ${row.state}, India`
-}));
-    
+      address: `${row.village}, ${row.subdistrict}, ${row.district}, ${row.state}, India`
+    }));
 
     res.json(formatted);
   } catch (err) {

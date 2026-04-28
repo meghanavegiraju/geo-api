@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 function App() {
-  const API_URL = "https://geo-api-11j8.onrender.com";
+  const API_URL = "https://geo-api-11j8.onrender.com/";
   const API_KEY = "16c24b72d7d478e6995cde4ec3388d7b"; // 🔴 replace with your key
 
   const headers = {
@@ -31,9 +31,8 @@ function App() {
       setStates(Array.isArray(data) ? data : []);
     });
 }, []);
-
   // 🔹 Load Districts
- useEffect(() => {
+  useEffect(() => {
   if (!selectedState) return;
 
   fetch(`${API_URL}/districts?state=${selectedState}`, {
@@ -57,9 +56,9 @@ function App() {
     .then(res => res.json())
     .then(data => setSubdistricts(Array.isArray(data) ? data : []));
 }, [selectedDistrict]);
+  
 
   // 🔹 Load Villages
-  
   useEffect(() => {
   if (!selectedSubdistrict) return;
 
@@ -128,20 +127,28 @@ function App() {
       </select>
 
       {/* 🔹 Village */}
-      <select
+      {/* <select
         value={selectedVillage}
         onChange={(e) => setSelectedVillage(e.target.value)}
       >
         <option value="">Select Village</option>
         {villages.map((v, i) => (
-          // <option key={i} value={v.address}>
-          //   {v.address}
-          // </option>
-          <option key={i} value={v.fullAddress}>
-  {v.village}
-</option>
+          <option key={i} value={v.address}>
+            {v.address}
+          </option>
         ))}
-      </select>
+      </select> */}
+      <select
+  value={selectedVillage}
+  onChange={(e) => setSelectedVillage(e.target.value)}
+>
+  <option value="">Select Village</option>
+  {villages.map((v, i) => (
+    <option key={i} value={v.address}>
+      {v.address}
+    </option>
+  ))}
+</select>
 
       <h3>Selected Address:</h3>
       <p>{selectedVillage}</p>
