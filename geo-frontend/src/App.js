@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 function App() {
   const API_URL = "https://geo-api-11j8.onrender.com";
-  const API_KEY = "6aa256fd9d74009f1881e474757fe1df"; // 🔴 paste your key
+  const API_KEY = "16c24b72d7d478e6995cde4ec3388d7b"; // 🔴 paste your key
 
   const [states, setStates] = useState([]);
   const [districts, setDistricts] = useState([]);

@@ -127,7 +127,7 @@ app.get("/villages", validateApiKey, async (req, res) => {
 
   try {
     const result = await pool.query(
-      "SELECT * FROM final_india_village_data WHERE subdistrict = $1 LIMIT 20",
+      "SELECT * FROM final_india_village_data_state WHERE subdistrict = $1 LIMIT 20",
       [subdistrict]
     );
 
